@@ -13,6 +13,25 @@ inputs:
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
+  task-family:
+    description: 'Set the task family'
+    required: true
+  entry-point:
+    description: 'Override the container entrypoint to use for running the container'
+    required: false
+    default: ''
+  log-group:
+    description: 'Override the container log group to use for running the container. This defaults to /ecs/<task-family>'
+    required: false
+    default: ''
+  cpu:
+    description: 'Override the CPU value. Leave blank to use the value in the definition file'
+    required: false
+    default: ''
+  memory:
+    description: 'Override the memory value. Leave blank to use the value in the definition file'
+    required: false
+    default: ''
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'

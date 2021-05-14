@@ -1151,6 +1151,11 @@ async function run() {
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
+    const taskFamily = core.getInput('task-family', { required: true });
+    const entryPoint = core.getInput('entry-point', { required: false }) || '';
+    const logGroup = core.getInput('log-group', { required: false }) || '';
+    const memory = core.getInput('memory', { required: false }) || '';
+    const cpu = core.getInput('cpu', { required: false }) || '';
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -1160,6 +1165,8 @@ async function run() {
       throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
     }
     const taskDefContents = require(taskDefPath);
+
+    taskDefContents.family = taskFamily;
 
     // Insert the image URI
     if (!Array.isArray(taskDefContents.containerDefinitions)) {
@@ -1172,6 +1179,22 @@ async function run() {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
+
+    if (entryPoint) {
+      containerDef.entryPoint = entryPoint.split(' ');
+    }
+    if (logGroup) {
+      containerDef.logConfiguration.options['awslogs-group'] = logGroup;
+    } else {
+      containerDef.logConfiguration.options['awslogs-group'] = `/ecs/${taskFamily}`;
+    }
+
+    if (memory) {
+      taskDefContents.memory = memory;
+    }
+    if (cpu) {
+      taskDefContents.cpu = cpu;
+    }
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
