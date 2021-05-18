@@ -1156,6 +1156,7 @@ async function run() {
     const logGroup = core.getInput('log-group', { required: false }) || '';
     const memory = core.getInput('memory', { required: false }) || '';
     const cpu = core.getInput('cpu', { required: false }) || '';
+    const storageSize = core.getInput('ephemeral-storage-size-in-gib', { required: false }) || '';
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -1194,6 +1195,11 @@ async function run() {
     }
     if (cpu) {
       taskDefContents.cpu = cpu;
+    }
+    if (storageSize) {
+      taskDefContents.ephemeralStorage = {
+        sizeInGiB: parseInt(storageSize, 10)
+      };
     }
 
     // Write out a new task definition file
