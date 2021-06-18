@@ -15,6 +15,8 @@ async function run() {
     const memory = core.getInput('memory', { required: false }) || '';
     const cpu = core.getInput('cpu', { required: false }) || '';
     const storageSize = core.getInput('ephemeral-storage-size-in-gib', { required: false }) || '';
+    const environmentVariablesFile = core.getInput('environment-file', { required: false }) || '';
+    const secretsFile = core.getInput('secrets-file', { required: false }) || '';
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -46,6 +48,13 @@ async function run() {
       containerDef.logConfiguration.options['awslogs-group'] = logGroup;
     } else {
       containerDef.logConfiguration.options['awslogs-group'] = `/ecs/${taskFamily}`;
+    }
+
+    if (environmentVariablesFile) {
+      containerDef.environment = require(environmentVariablesFile);
+    }
+    if (secretsFile) {
+      containerDef.secrets = require(secretsFile);
     }
 
     if (memory) {
