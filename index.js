@@ -51,10 +51,16 @@ async function run() {
     }
 
     if (environmentVariablesFile) {
-      containerDef.environment = require(environmentVariablesFile);
+      const envFilePath = path.isAbsolute(environmentVariablesFile) ?
+        environmentVariablesFile :
+        path.join(process.env.GITHUB_WORKSPACE, environmentVariablesFile);
+      containerDef.environment = require(envFilePath);
     }
     if (secretsFile) {
-      containerDef.secrets = require(secretsFile);
+      const secretsFilePath = path.isAbsolute(secretsFile) ?
+        secretsFile :
+        path.join(process.env.GITHUB_WORKSPACE, secretsFile);
+      containerDef.secrets = require(secretsFilePath);
     }
 
     if (memory) {
