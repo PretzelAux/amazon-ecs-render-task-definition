@@ -36,6 +36,14 @@ inputs:
     description: 'Expand the ephemeral storage beyond the default 20GiB.'
     required: false
     default: ''
+  environment-file:
+    description: 'JSON file containing environment variables to mix in'
+    required: false
+    default: ''
+  secrets-file:
+    description: 'JSON file containing environment secrets to mix in'
+    required: false
+    default: ''
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
