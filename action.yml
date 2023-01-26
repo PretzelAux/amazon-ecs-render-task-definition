@@ -20,6 +20,10 @@ inputs:
     description: 'Override the container entrypoint to use for running the container'
     required: false
     default: ''
+  command:
+    description: 'Override the container command to use for running the container'
+    required: false
+    default: ''
   log-group:
     description: 'Override the container log group to use for running the container. This defaults to /ecs/<task-family>'
     required: false
