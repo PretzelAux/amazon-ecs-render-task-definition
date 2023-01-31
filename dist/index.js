@@ -1153,6 +1153,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
     const taskFamily = core.getInput('task-family', { required: true });
     const entryPoint = core.getInput('entry-point', { required: false }) || '';
+    const command = core.getInput('command', { required: false }) || '';
     const logGroup = core.getInput('log-group', { required: false }) || '';
     const memory = core.getInput('memory', { required: false }) || '';
     const cpu = core.getInput('cpu', { required: false }) || '';
@@ -1185,6 +1186,9 @@ async function run() {
 
     if (entryPoint) {
       containerDef.entryPoint = entryPoint.split(' ');
+    }
+    if (command) {
+      containerDef.command = command.split(' ');
     }
     if (logGroup) {
       containerDef.logConfiguration.options['awslogs-group'] = logGroup;
